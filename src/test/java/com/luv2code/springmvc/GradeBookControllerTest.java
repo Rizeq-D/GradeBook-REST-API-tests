@@ -29,6 +29,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @TestPropertySource("/application-test.properties")
@@ -112,6 +114,22 @@ public class GradeBookControllerTest {
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(2)));
     }
+    @Test
+    public void createStudentHttpRequest() throws Exception{
+
+        student.setFirstname("Hamed");
+        student.setLastname("Amer");
+        student.setEmailAddress("hamed@gmail.com");
+
+        mockMvc.perform(post("/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(student)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+
+        CollegeStudent verifyStudent = studentDao.findByEmailAddress("hamed@gmail.com");
+        assertNotNull(verifyStudent, "Student should be valid");
+    }
     @AfterEach
     public void setupAfterTransaction() {
         jdbc.execute(sqlDeleteStudent);
@@ -121,3 +139,28 @@ public class GradeBookControllerTest {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
