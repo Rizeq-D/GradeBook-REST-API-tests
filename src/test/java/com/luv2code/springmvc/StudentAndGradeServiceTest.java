@@ -25,50 +25,34 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource("/application-test.properties")
 @SpringBootTest
 public class StudentAndGradeServiceTest {
-
     @Autowired
     private JdbcTemplate jdbc;
-
     @Autowired
     private StudentDao studentDao;
-
     @Autowired
     private MathGradesDao mathGradeDao;
-
     @Autowired
     private ScienceGradesDao scienceGradeDao;
-
     @Autowired
     private HistoryGradesDao historyGradeDao;
-
     @Autowired
     private StudentAndGradeService studentService;
-
     @Value("${sql.script.create.student}")
     private String sqlAddStudent;
-
     @Value("${sql.script.create.math.grade}")
     private String sqlAddMathGrade;
-
     @Value("${sql.script.create.science.grade}")
     private String sqlAddScienceGrade;
-
     @Value("${sql.script.create.history.grade}")
     private String sqlAddHistoryGrade;
-
     @Value("${sql.script.delete.student}")
     private String sqlDeleteStudent;
-
     @Value("${sql.script.delete.math.grade}")
     private String sqlDeleteMathGrade;
-
     @Value("${sql.script.delete.science.grade}")
     private String sqlDeleteScienceGrade;
-
     @Value("${sql.script.delete.history.grade}")
     private String sqlDeleteHistoryGrade;
-
-
     @BeforeEach
     public void setupDatabase() {
         jdbc.execute(sqlAddStudent);
@@ -76,7 +60,6 @@ public class StudentAndGradeServiceTest {
         jdbc.execute(sqlAddScienceGrade);
         jdbc.execute(sqlAddHistoryGrade);
     }
-
     @Test
     public void isStudentNullCheck() {
 
@@ -84,8 +67,6 @@ public class StudentAndGradeServiceTest {
 
         assertFalse(studentService.checkIfStudentIsNull(0), "No student should have 0 id : return false");
     }
-
-
     @Test
     public void createStudentService() {
 
@@ -95,7 +76,6 @@ public class StudentAndGradeServiceTest {
 
         assertEquals("chad.darby@luv2code_school.com", student.getEmailAddress(), "find by email");
     }
-
     @Test
     public void deleteStudentService() {
 
@@ -121,8 +101,6 @@ public class StudentAndGradeServiceTest {
         assertFalse(deletedScienceGrade.isPresent(),  "return false");
         assertFalse(deletedHistoryGrade.isPresent(), "return false");
     }
-
-
     @Test
     public void studentInformationService() {
         GradebookCollegeStudent gradebookCollegeStudentTest = studentService.studentInformation(1);
@@ -224,8 +202,6 @@ public class StudentAndGradeServiceTest {
         assertTrue(gradebookTest.getStudents().get(0).getStudentGrades().getScienceGradeResults() != null);
         assertTrue(gradebookTest.getStudents().get(0).getStudentGrades().getMathGradeResults() != null);
     }
-
-
     @AfterEach
     public void setupAfterTransaction() {
         jdbc.execute(sqlDeleteStudent);
