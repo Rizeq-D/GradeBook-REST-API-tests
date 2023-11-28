@@ -1,11 +1,14 @@
 package com.luv2code.springmvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luv2code.springmvc.models.CollegeStudent;
 import com.luv2code.springmvc.repository.HistoryGradesDao;
 import com.luv2code.springmvc.repository.MathGradesDao;
 import com.luv2code.springmvc.repository.ScienceGradesDao;
 import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -13,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -43,6 +48,12 @@ public class GradeBookControllerTest {
     private HistoryGradesDao historyGradeDao;
     @Autowired
     private StudentAndGradeService studentService;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
+    private CollegeStudent student;
     @Value("${sql.script.create.student}")
     private String sqlAddStudent;
     @Value("${sql.script.create.math.grade}")
@@ -60,6 +71,20 @@ public class GradeBookControllerTest {
     @Value("${sql.script.delete.history.grade}")
     private String sqlDeleteHistoryGrade;
 
+    public static final MediaType APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON;
+
+    @BeforeAll
+    public static void setUp() {
+
+        request = new MockHttpServletRequest();
+
+        request.setParameter("firstname", "Manal");
+
+        request.setParameter("lastname", "Alalem");
+
+        request.setParameter("emailAddress", "manal@gmail.com");
+    }
+
     @BeforeEach
     public void setupDatabase() {
         jdbc.execute(sqlAddStudent);
@@ -68,12 +93,7 @@ public class GradeBookControllerTest {
         jdbc.execute(sqlAddHistoryGrade);
 
     }
-
-    @Test
-    public void placeHolder() {
-
-    }
-
+    
     @AfterEach
     public void setupAfterTransaction() {
         jdbc.execute(sqlDeleteStudent);
