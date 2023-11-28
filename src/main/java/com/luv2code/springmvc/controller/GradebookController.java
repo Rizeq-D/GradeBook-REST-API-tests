@@ -16,18 +16,13 @@ public class GradebookController {
 
     @Autowired
     private StudentAndGradeService studentService;
-
     @Autowired
     private Gradebook gradebook;
-
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<GradebookCollegeStudent> getStudents() {
         gradebook = studentService.getGradebook();
         return gradebook.getStudents();
     }
-
-
     @GetMapping("/studentInformation/{id}")
     public GradebookCollegeStudent studentInformation(@PathVariable int id) {
 
@@ -38,8 +33,6 @@ public class GradebookController {
 
         return studentEntity;
     }
-
-
     @PostMapping(value = "/")
     public List<GradebookCollegeStudent> createStudent(@RequestBody CollegeStudent student) {
 
@@ -47,8 +40,6 @@ public class GradebookController {
         gradebook = studentService.getGradebook();
         return gradebook.getStudents();
     }
-
-
     @DeleteMapping("/student/{id}")
     public List<GradebookCollegeStudent> deleteStudent(@PathVariable int id) {
 
@@ -60,8 +51,6 @@ public class GradebookController {
         gradebook = studentService.getGradebook();
         return gradebook.getStudents();
     }
-
-
     @PostMapping(value = "/grades")
     public GradebookCollegeStudent createGrade(@RequestParam("grade") double grade,
                                                @RequestParam("gradeType") String gradeType,
