@@ -34,6 +34,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -231,7 +232,8 @@ public class GradeBookControllerTest {
 
         assertTrue(mathGrade.isPresent());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/grades/{id}/{gradeType}", 1, "math"))
+        mockMvc.perform(MockMvcRequestBuilders.delete(
+                "/grades/{id}/{gradeType}", 1, "math"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.id", is(1)))
@@ -239,6 +241,16 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.lastname", is("Roby")))
                 .andExpect(jsonPath("$.emailAddress", is("eric.roby@luv2code_school.com")))
                 .andExpect(jsonPath("$.studentGrades.mathGradeResults", hasSize(0)));
+    }
+    @Test
+    public void deleteAValidGradeHttpRequestStudentIdtDoesNotExistEmptyRespond() throws Exception{
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(
+                "/grades/{id}/{gradeType}", 2, "history"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status", is(404)))
+                .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
+
     }
     @AfterEach
     public void setupAfterTransaction() {
